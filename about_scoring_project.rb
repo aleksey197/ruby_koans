@@ -31,6 +31,25 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 def score(dice)
   # You need to write this method
+  counts = {}
+  result = dice.inject(0) do |mem, var|
+    counts.has_key?(var) ? counts[var] += 1 : counts[var] = 1
+    case var
+      when 1 then mem += 100
+      when 5 then mem += 50
+      else mem += 0
+    end
+  end
+  counts.each do |k, v|
+    (v / 3).times do
+      case k
+        when 1 then result += 700
+        when 5 then result += 350
+        else result += k * 100
+      end
+    end
+  end
+  result
 end
 
 class AboutScoringProject < Neo::Koan

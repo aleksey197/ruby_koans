@@ -15,10 +15,29 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 class Proxy
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
+    @messages = Hash.new{0} # key is a method name, value is a number of times called
   end
 
-  # WRITE CODE HERE
+  def method_missing(method_name, *args, &block)
+    @messages[method_name.to_sym] += 1
+    if @object.respond_to?(method_name)
+      @object.send(method_name.to_sym, *args, &block)
+    else
+      super(method_name, *args, &block)
+    end
+  end
+
+  def messages
+    @messages.keys
+  end
+
+  def called?(method_name)
+    @messages.keys.include?(method_name.to_sym) ? true : false
+  end
+
+  def number_of_times_called(method_name)
+    @messages[method_name.to_sym]
+  end
 end
 
 # The proxy object should pass the following Koan:
@@ -119,37 +138,29 @@ end
 class TelevisionTest < Neo::Koan
   def test_it_turns_on
     tv = Television.new
-
     tv.power
     assert tv.on?
   end
 
   def test_it_also_turns_off
     tv = Television.new
-
     tv.power
     tv.power
-
     assert ! tv.on?
   end
 
   def test_edge_case_on_off
     tv = Television.new
-
     tv.power
     tv.power
     tv.power
-
     assert tv.on?
-
     tv.power
-
     assert ! tv.on?
   end
 
   def test_can_set_the_channel
     tv = Television.new
-
     tv.channel = 11
     assert_equal 11, tv.channel
   end
