@@ -18,7 +18,7 @@ class Proxy
     @messages = Hash.new{0} # key is a method name, value is a number of times called
   end
 
-    def method_missing(method_name, *args, &block)
+  def method_missing(method_name, *args, &block)
     @messages[method_name.to_sym] += 1
     if @object.respond_to?(method_name)
       @object.send(method_name.to_sym, *args, &block)
@@ -138,37 +138,29 @@ end
 class TelevisionTest < Neo::Koan
   def test_it_turns_on
     tv = Television.new
-
     tv.power
     assert tv.on?
   end
 
   def test_it_also_turns_off
     tv = Television.new
-
     tv.power
     tv.power
-
     assert ! tv.on?
   end
 
   def test_edge_case_on_off
     tv = Television.new
-
     tv.power
     tv.power
     tv.power
-
     assert tv.on?
-
     tv.power
-
     assert ! tv.on?
   end
 
   def test_can_set_the_channel
     tv = Television.new
-
     tv.channel = 11
     assert_equal 11, tv.channel
   end
