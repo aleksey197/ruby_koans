@@ -15,11 +15,11 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 class Proxy
   def initialize(target_object)
     @object = target_object
-    @messages = {} # key is a method name, value is a number of times called
+    @messages = Hash.new{0} # key is a method name, value is a number of times called
   end
 
     def method_missing(method_name, *args, &block)
-    @messages.has_key?(method_name.to_sym) ? @messages[method_name.to_sym] += 1 : @messages[method_name.to_sym] = 1
+    @messages[method_name.to_sym] += 1
     if @object.respond_to?(method_name)
       @object.send(method_name.to_sym, *args, &block)
     else
@@ -36,7 +36,7 @@ class Proxy
   end
 
   def number_of_times_called(method_name)
-    @messages.has_key?(method_name.to_sym) ? @messages[method_name.to_sym] : 0
+    @messages[method_name.to_sym]
   end
 end
 

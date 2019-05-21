@@ -41,11 +41,11 @@ def score(dice)
     end
   end
   counts.each do |k, v|
-    (v/3).times do
+    (v / 3).times do
       case k
         when 1 then result += 700
         when 5 then result += 350
-        else result += k*100
+        else result += k * 100
       end
     end
   end
